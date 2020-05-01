@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "entity.hpp"
 
 class Camera {
 public: 
@@ -11,6 +12,7 @@ public:
     void setx(float xPos);
     void sety(float yPos);
     void displayPos();
+    float centerX(Entity &entity);
 private:
     float x, y;
 };

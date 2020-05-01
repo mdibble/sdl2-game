@@ -1,6 +1,6 @@
 build:
 	g++ -Wfatal-errors \
-	./*.cpp \
+	./src/*.cpp \
 	-I "C:\MinGW\include" \
 	-L "C:\MinGW\lib" \
 	-lmingw32 \
