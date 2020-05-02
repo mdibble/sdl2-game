@@ -16,6 +16,8 @@ public:
     void move(float xPos, float yPos);
     void jump(float height);
     void updateLocation();
+    void setx(float xPos);
+    void sety(float yPos);
 private:
     float x, y;
     float velocityX, velocityY;

@@ -55,7 +55,6 @@ void RenderWindow::render(Entity &entity) {
 }
 
 void RenderWindow::draw() {
-    
     SDL_RenderPresent(renderer);
 }
 

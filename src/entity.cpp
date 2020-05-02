@@ -45,6 +45,14 @@ float Entity::gety() {
     return (this -> y);
 }
 
+void Entity::setx(float xPos) {
+    this -> x = xPos;
+}
+
+void Entity::sety(float yPos) {
+    this -> y = yPos;
+}
+
 float Entity::getvelocityX() {
     return (this -> velocityX);
 }
