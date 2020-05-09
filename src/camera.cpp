@@ -28,6 +28,6 @@ void Camera::displayPos() {
 }
 
 float Camera::centerX(Entity &entity) {
-    this -> x = entity.getx();
+    this -> x = entity.getx() - 200;
     return this -> x;
 }

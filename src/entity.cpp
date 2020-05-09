@@ -1,4 +1,5 @@
 #include "entity.hpp"
+#include "map.hpp"
 #include <iostream>
 
 Entity::Entity(float xPos, float yPos, SDL_Texture* textSrc) {
@@ -59,6 +60,45 @@ float Entity::getvelocityX() {
 
 float Entity::getvelocityY() {
     return (this -> velocityY);
+}
+
+void Entity::pollTiles(bool debug) {
+    this -> tiles[0][0] = (this -> x) / 48;
+    this -> tiles[0][1] = (this -> y) / 48;
+
+    this -> tiles[1][0] = (this -> x + 48) / 48;
+    this -> tiles[1][1] = (this -> y) / 48;
+
+    this -> tiles[2][0] = (this -> x) / 48;
+    this -> tiles[2][1] = (this -> y + 48) / 48;
+
+    this -> tiles[3][0] = (this -> x + 48) / 48;
+    this -> tiles[3][1] = (this -> y + 48) / 48;
+
+    if (debug) {
+        std::cout << "T-LEFT: " << this -> tiles[0][0] << ", " << this -> tiles[0][1] <<
+                 " T-RIGHT: " << this -> tiles[1][0] << ", " << this -> tiles[1][1] <<
+                 " B-LEFT: " << this -> tiles[2][0] << ", " << this -> tiles[2][1] <<
+                 " B-RIGHT: " << this -> tiles[3][0] << ", " << this -> tiles[3][1] << std::endl;
+    }
+}
+
+bool Entity::collision(int map[MAP_WIDTH][MAP_WIDTH]) {
+
+    for (int i = 0; i < 4; i++)
+        if (map[this -> tiles[i][1]][this -> tiles[i][0]] != 0)
+            return true;
+       
+    return false;
+}
+
+bool Entity::collision(int *map) {
+
+    for (int i = 0; i < 4; i++)
+        if (*(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) != 0)
+            return true;
+       
+    return false;
 }
 
 SDL_Texture* Entity::gettexture() {

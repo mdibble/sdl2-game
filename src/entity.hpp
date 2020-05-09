@@ -18,9 +18,13 @@ public:
     void updateLocation();
     void setx(float xPos);
     void sety(float yPos);
+    void pollTiles(bool debug);
+    bool collision(int map[15][15]);
+    bool collision(int *map);
 private:
     float x, y;
     float velocityX, velocityY;
+    int tiles[4][2];
     SDL_Rect currentFrame;
     SDL_Texture *texture;
 };

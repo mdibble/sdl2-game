@@ -19,6 +19,7 @@ int main(int argc, char* args[]) {
     RenderWindow window("sdl2-game", 1280, 720);
 
     SDL_Texture* general = window.loadTexture("assets/images/general.png");
+    SDL_Texture* character = window.loadTexture("assets/images/character.png");
 
     int reference[MAP_WIDTH][MAP_HEIGHT] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -38,8 +39,12 @@ int main(int argc, char* args[]) {
 
 
     Camera cam(0, 0);
+
     Entity sky(0, 0, general);
     sky.setSpriteSrc(50, 330, 1, 1);
+
+    Entity mario(0, 0, character);
+    mario.setSpriteSrc(80, 34, 16, 16);
 
     Map map(reference);
 
@@ -58,24 +63,36 @@ int main(int argc, char* args[]) {
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_LEFT:
-                        cam.setx(cam.getx() - 10);
+                        // cam.setx(cam.getx() - 10);
+                        mario.setx(mario.getx() - 10);
+                        mario.pollTiles(true);
                         break;
                     case SDLK_RIGHT:
-                        cam.setx(cam.getx() + 10);
+                        // cam.setx(cam.getx() + 10);
+                        mario.setx(mario.getx() + 10);
+                        mario.pollTiles(true);
                         break;
                     case SDLK_UP:
-                        cam.sety(cam.gety() + 10);
+                        // cam.sety(cam.gety() + 10);
+                        mario.sety(mario.gety() - 10);
+                        mario.pollTiles(true);
                         break;
                     case SDLK_DOWN:
-                        cam.sety(cam.gety() - 10);
+                        // cam.sety(cam.gety() - 10);
+                        mario.sety(mario.gety() + 10);
+                        mario.pollTiles(true);
+                        std::cout << mario.collision(&reference[0][0]) << std::endl;
                         break;
                 }
             }
         }
 
         window.clear();
+        
+        cam.centerX(mario);
         window.render(sky);
         map.loadMap(window, cam, general);
+        window.render(mario, cam);
         window.draw();
 
         frameTime = SDL_GetTicks() - frameStart;
