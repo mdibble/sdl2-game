@@ -65,23 +65,19 @@ int main(int argc, char* args[]) {
                     case SDLK_LEFT:
                         // cam.setx(cam.getx() - 10);
                         mario.setx(mario.getx() - 10);
-                        mario.pollTiles(true);
                         break;
                     case SDLK_RIGHT:
                         // cam.setx(cam.getx() + 10);
                         mario.setx(mario.getx() + 10);
-                        mario.pollTiles(true);
                         break;
                     case SDLK_UP:
                         // cam.sety(cam.gety() + 10);
                         mario.sety(mario.gety() - 10);
-                        mario.pollTiles(true);
                         break;
                     case SDLK_DOWN:
                         // cam.sety(cam.gety() - 10);
                         mario.sety(mario.gety() + 10);
-                        mario.pollTiles(true);
-                        std::cout << mario.collision(&reference[0][0]) << std::endl;
+                        
                         break;
                 }
             }
@@ -89,6 +85,18 @@ int main(int argc, char* args[]) {
 
         window.clear();
         
+        mario.pollTiles(false);
+        if (mario.collision(&reference[0][0])) {
+            std::cout << "Clipped" << std::endl;
+            // testing
+            while (mario.collision(&reference[0][0])) {
+                mario.sety(mario.gety() - 1);
+                mario.pollTiles(true);
+            }
+                
+        }
+            
+
         cam.centerX(mario);
         window.render(sky);
         map.loadMap(window, cam, general);
