@@ -9,6 +9,7 @@
 #include "entity.hpp"
 #include "camera.hpp"
 #include "map.hpp"
+#include "character.hpp"
 
 int main(int argc, char* args[]) {
     if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -43,7 +44,7 @@ int main(int argc, char* args[]) {
     Entity sky(0, 0, general);
     sky.setSpriteSrc(50, 330, 1, 1);
 
-    Entity mario(0, 0, character);
+    Character mario(0, 0, character);
     mario.setSpriteSrc(80, 34, 16, 16);
 
     Map map(reference);
@@ -63,40 +64,34 @@ int main(int argc, char* args[]) {
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_LEFT:
-                        // cam.setx(cam.getx() - 10);
                         mario.setx(mario.getx() - 10);
                         break;
                     case SDLK_RIGHT:
-                        // cam.setx(cam.getx() + 10);
                         mario.setx(mario.getx() + 10);
                         break;
                     case SDLK_UP:
-                        // cam.sety(cam.gety() + 10);
                         mario.sety(mario.gety() - 10);
                         break;
                     case SDLK_DOWN:
-                        // cam.sety(cam.gety() - 10);
                         mario.sety(mario.gety() + 10);
-                        
-                        break;
                 }
             }
         }
 
-        window.clear();
+        mario.updateVelocity();
+        mario.move();
         
         mario.pollTiles(false);
         if (mario.collision(&reference[0][0])) {
             std::cout << "Clipped" << std::endl;
-            // testing
             while (mario.collision(&reference[0][0])) {
                 mario.sety(mario.gety() - 1);
-                mario.pollTiles(true);
+                mario.pollTiles(false);
             }
-                
+            mario.setvelocityY(0);
         }
-            
 
+        window.clear();
         cam.centerX(mario);
         window.render(sky);
         map.loadMap(window, cam, general);
