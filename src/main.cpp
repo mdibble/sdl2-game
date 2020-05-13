@@ -74,18 +74,23 @@ int main(int argc, char* args[]) {
                         break;
                     case SDLK_DOWN:
                         mario.sety(mario.gety() + 10);
+                    case SDLK_x:
+                        if (mario.getcanJump())
+                            mario.jump(-10);
                 }
             }
         }
 
         mario.updateVelocity();
         mario.move();
+
+        std::cout << mario.getvelocityY() << std::endl;
         
         mario.pollTiles(false);
         if (mario.collision(&reference[0][0])) {
-            std::cout << "Clipped" << std::endl;
+            //std::cout << "Clipped" << std::endl;
             while (mario.collision(&reference[0][0])) {
-                mario.sety(mario.gety() - 1);
+                mario.inBounds();
                 mario.pollTiles(false);
             }
             mario.setvelocityY(0);
