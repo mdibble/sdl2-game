@@ -180,16 +180,19 @@ bool Character::collision(int *map) {
     if (L || R)
         this -> setvelocityX(0);
 
-    if (B || T)
+    if (B) {
         this -> setvelocityY(0);
+        this -> setcanJump(true);
+    }
+
+    if (T)
+        this -> setvelocityY(this -> getvelocityY() * -0.75);
+
 
     this -> setcollisionLeft(L);
     this -> setcollisionRight(R);
     this -> setcollisionTop(T);
     this -> setcollisionBottom(B);
-
-    if (this -> getcollisionBottom())
-        canJump = true;
 
     if (this -> getcollisionLeft() || this -> getcollisionRight() || this -> getcollisionBottom() || this -> getcollisionTop())
         return true;
