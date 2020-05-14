@@ -79,6 +79,9 @@ int main(int argc, char* args[]) {
         else if (controller.getR())
             mario.setvelocityX(mario.getvelocityX() + 1);
 
+        else if (!controller.getL() && !controller.getR() && !mario.getcanJump())
+            mario.setvelocityX(mario.getvelocityX() / 1.05);
+
         else
             mario.setvelocityX(mario.getvelocityX() / 1.2);
 
