@@ -10,6 +10,7 @@
 #include "camera.hpp"
 #include "map.hpp"
 #include "character.hpp"
+#include "controller.hpp"
 
 int main(int argc, char* args[]) {
     if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -47,6 +48,8 @@ int main(int argc, char* args[]) {
     Character mario(0, 0, character);
     mario.setSpriteSrc(80, 34, 16, 16);
 
+    Controller controller(0);
+
     Map map(reference);
 
     Uint32 frameStart;
@@ -61,6 +64,7 @@ int main(int argc, char* args[]) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT)
                 gameLoop = false;
+            controller.pollInputs(event);
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_LEFT:
@@ -84,7 +88,7 @@ int main(int argc, char* args[]) {
         mario.updateVelocity();
         mario.move();
 
-        std::cout << mario.getvelocityY() << std::endl;
+        // std::cout << mario.getvelocityY() << std::endl;
         
         mario.pollTiles(false);
         if (mario.collision(&reference[0][0])) {
