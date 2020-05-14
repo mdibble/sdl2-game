@@ -22,34 +22,32 @@ int main(int argc, char* args[]) {
 
     SDL_Texture* general = window.loadTexture("assets/images/general.png");
     SDL_Texture* character = window.loadTexture("assets/images/character.png");
-
-    int reference[MAP_WIDTH][MAP_HEIGHT] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
-                                            {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
-                                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-                                            {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
-                                            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
-
+    // must allow map to work for non-square arrays
+    int reference[MAP_WIDTH][MAP_HEIGHT] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+                                            {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                                            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                                            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
     Camera cam(0, 0);
 
     Entity sky(0, 0, general);
     sky.setSpriteSrc(50, 330, 1, 1);
 
-    Character mario(0, 0, character);
+    Character mario(40, 40, character);
     mario.setSpriteSrc(80, 34, 16, 16);
 
     Controller controller(0);
-
     Map map(reference);
 
     Uint32 frameStart;
@@ -65,39 +63,34 @@ int main(int argc, char* args[]) {
             if (event.type == SDL_QUIT)
                 gameLoop = false;
             controller.pollInputs(event);
-            if (event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.sym) {
-                    case SDLK_LEFT:
-                        mario.setx(mario.getx() - 10);
-                        break;
-                    case SDLK_RIGHT:
-                        mario.setx(mario.getx() + 10);
-                        break;
-                    case SDLK_UP:
-                        mario.sety(mario.gety() - 10);
-                        break;
-                    case SDLK_DOWN:
-                        mario.sety(mario.gety() + 10);
-                    case SDLK_x:
-                        if (mario.getcanJump())
-                            mario.jump(-10);
-                }
-            }
         }
+
+        if (controller.getB())
+            mario.setrunning(true);
+        else
+            mario.setrunning(false);
+
+        if (controller.getL())
+            mario.setvelocityX(mario.getvelocityX() - 1);
+
+        if (controller.getR())
+            mario.setvelocityX(mario.getvelocityX() + 1);
+
+        if (!controller.getL() && !controller.getR())
+            mario.setvelocityX(mario.getvelocityX() / 1.2);
+
+        if (controller.getA())
+            mario.jump(-15);
 
         mario.updateVelocity();
         mario.move();
-
-        // std::cout << mario.getvelocityY() << std::endl;
         
         mario.pollTiles(false);
         if (mario.collision(&reference[0][0])) {
-            //std::cout << "Clipped" << std::endl;
             while (mario.collision(&reference[0][0])) {
                 mario.inBounds();
                 mario.pollTiles(false);
             }
-            mario.setvelocityY(0);
         }
 
         window.clear();

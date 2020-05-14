@@ -10,19 +10,55 @@ Controller::Controller(int test) {
     this -> R = false;
 }
 
+bool Controller::getA() {
+    return this -> A;
+}
+
+bool Controller::getB() {
+    return this -> B;
+}
+
+bool Controller::getL() {
+    return this -> L;
+}
+
+bool Controller::getR() {
+    return this -> R;
+}
+
 void Controller::pollInputs(SDL_Event &event) {
-    
-    this -> L = false;
-    this -> R = false;
-    this -> A = false;
-    this -> B = false;
 
     if (event.type == SDL_KEYDOWN) {
-        this -> L = (event.key.keysym.sym == SDLK_LEFT) ? true : false;
-        this -> R = (event.key.keysym.sym == SDLK_RIGHT) ? true : false;
-        this -> A = (event.key.keysym.sym == SDLK_z) ? true : false;
-        this -> B = (event.key.keysym.sym == SDLK_x) ? true : false;
+        switch (event.key.keysym.sym) {
+            case SDLK_LEFT:
+                this -> L = true;
+                break;
+            case SDLK_RIGHT:
+                this -> R = true;
+                break;
+            case SDLK_z:
+                this -> B = true;
+                break;
+            case SDLK_x:
+                this -> A = true;
+                break;
+        }
     }   
-    std::cout << this -> L << this -> R << this -> A << this -> B << std::endl;
-    // work in progress, have to figure out how to handle multiple inputs at once
+
+    if (event.type == SDL_KEYUP) {
+        switch (event.key.keysym.sym) {
+            case SDLK_LEFT:
+                this -> L = false;
+                break;
+            case SDLK_RIGHT:
+                this -> R = false;
+                break;
+            case SDLK_z:
+                this -> B = false;
+                break;
+            case SDLK_x:
+                this -> A = false;
+                break;
+        }
+    }  
 }

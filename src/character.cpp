@@ -16,6 +16,7 @@ Character::Character(float xPos, float yPos, SDL_Texture* textSrc) {
     this -> collisionRight = false;
 
     this -> canJump = true;
+    this -> running = false;
 
     currentFrame.x = 0;
     currentFrame.y = 0;
@@ -33,6 +34,10 @@ float Character::getvelocityY() {
 
 bool Character::getcanJump() {
     return (this -> canJump);
+}
+
+bool Character::getrunning() {
+    return (this -> running);
 }
 
 bool Character::getcollisionLeft() {
@@ -63,6 +68,10 @@ void Character::setcanJump(bool state) {
     this -> canJump = state;
 }
 
+void Character::setrunning(bool state) {
+    this -> running = state;
+}
+
 void Character::setcollisionBottom(bool state) {
     this -> collisionBottom = state;
 }
@@ -80,8 +89,11 @@ void Character::setcollisionRight(bool state) {
 }
 
 void Character::updateVelocity() {
-    // temporary
     this -> velocityY = this -> velocityY + 0.5;
+    if (this -> velocityX > 5)
+        this -> velocityX = 5;
+    else if (this -> velocityX < -5)
+        this -> velocityX = -5;
 }
 
 void Character::move() {
@@ -90,7 +102,9 @@ void Character::move() {
 }
 
 void Character::jump(float height) {
-    this -> setvelocityY(height);
+    if (this -> canJump)
+        this -> setvelocityY(height);
+    this -> setcanJump(false);
 }
 
 void Character::pollTiles(bool debug) {
@@ -140,15 +154,6 @@ void Character::pollTiles(bool debug) {
 
 bool Character::collision(int *map) {
 
-    // [0] Top Left
-    // [1] Top Right
-    // [2] Bottom Left
-    // [3] Bottom Right
-    // [4] Top Middle
-    // [5] Right Middle
-    // [6] Bottom Middle
-    // [7] Left Middle
-
     //  0   4   1
     //
     //  7       5
@@ -182,8 +187,9 @@ bool Character::collision(int *map) {
     this -> setcollisionRight(R);
     this -> setcollisionTop(T);
     this -> setcollisionBottom(B);
-    
-    //std::cout << L << R << B << T << std::endl;
+
+    if (this -> getcollisionBottom())
+        canJump = true;
 
     if (this -> getcollisionLeft() || this -> getcollisionRight() || this -> getcollisionBottom() || this -> getcollisionTop())
         return true;
