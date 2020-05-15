@@ -5,6 +5,7 @@
 Camera::Camera(float xPos, float yPos) {
     this -> x = xPos;
     this -> y = yPos;
+    this -> frame = 0;
 }
 
 float Camera::getx() {
@@ -15,12 +16,20 @@ float Camera::gety() {
     return this -> y;
 }
 
+Uint32 Camera::getframe() {
+    return this -> frame;
+}
+
 void Camera::setx(float xPos) {
     this -> x = xPos;
 }
 
 void Camera::sety(float yPos) {
     this -> y = yPos;
+}
+
+void Camera::setframe(Uint32 amount) {
+    this -> frame = amount;
 }
 
 void Camera::displayPos() {

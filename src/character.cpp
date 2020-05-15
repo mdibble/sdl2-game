@@ -168,7 +168,9 @@ bool Character::collision(int *map) {
     bool clipped[8];
 
     for (int i = 0; i < 8; i++)
-        clipped[i] = *(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) != 0 ? true : false;
+        clipped[i] =   (*(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) != '0' && 
+                        (*(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) < 'a' ||
+                        *(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) > 'z')) ? true : false;
 
     bool L, R, B, T;
 
@@ -187,7 +189,6 @@ bool Character::collision(int *map) {
 
     if (T)
         this -> setvelocityY(this -> getvelocityY() * -0.75);
-
 
     this -> setcollisionLeft(L);
     this -> setcollisionRight(R);

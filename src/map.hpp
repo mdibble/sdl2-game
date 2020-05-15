@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAP_WIDTH 25
+#define MAP_WIDTH 256
 #define MAP_HEIGHT 15
 
 #include <SDL2/SDL.h>
