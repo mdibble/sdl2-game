@@ -42,6 +42,9 @@ void Map::loadMap(RenderWindow &window, Camera &cam, SDL_Texture *palette, Event
                 case '4':
                     entity.setSpriteSrc(0, 16, 16, 16);
                     break;
+                case '5':
+                    entity.setSpriteSrc(432, 0, 16, 16);
+                    break;
                 case '6':
                     entity.setSpriteSrc(0, 144, 16, 16);
                     break;

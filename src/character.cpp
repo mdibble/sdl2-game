@@ -172,7 +172,7 @@ void Character::pollTiles(bool debug) {
     }
 }
 
-bool Character::collision(int *map) {
+bool Character::collision(int *map, EventList *eventList, bool enableEvents) {
 
     //  0   4   1
     //
@@ -214,6 +214,16 @@ bool Character::collision(int *map) {
     this -> setcollisionRight(R);
     this -> setcollisionTop(T);
     this -> setcollisionBottom(B);
+
+    if (this -> getcollisionTop()) {
+        if (this -> status == 1 && *(map + (MAP_WIDTH * this -> tiles[4][1]) + this -> tiles[4][0]) == '2')
+            eventList -> addEvent(this -> tiles[4][0], this -> tiles[4][1], 1);
+        else if (*(map + (MAP_WIDTH * this -> tiles[4][1]) + this -> tiles[4][0]) == '2')
+            eventList -> addEvent(this -> tiles[4][0], this -> tiles[4][1], 0);
+        else if (*(map + (MAP_WIDTH * this -> tiles[4][1]) + this -> tiles[4][0]) == '3') {
+            eventList -> addEvent(this -> tiles[4][0], this -> tiles[4][1], 2);
+        }
+    }
 
     if (this -> getcollisionLeft() || this -> getcollisionRight() || this -> getcollisionBottom() || this -> getcollisionTop())
         return true;

@@ -6,6 +6,7 @@ public:
     int progressEvent();
     int bump();
     int breakBlock();
+    int questionBlockHit();
     int getX();
     int getY();
     void setX(int x);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.hpp"
+#include "eventList.hpp"
 
 class Character: public Entity {
 public:
@@ -26,7 +27,7 @@ public:
     void setcollisionTop(bool state);
     void setcollisionBottom(bool state);
     void pollTiles(bool debug);
-    bool collision(int *map);
+    bool collision(int *map, EventList *eventList, bool enableEvents);
     void inBounds();
     
 private:

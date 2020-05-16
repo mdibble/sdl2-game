@@ -100,8 +100,8 @@ int main(int argc, char* args[]) {
         mario.move();
         
         mario.pollTiles(false);
-        if (mario.collision(&reference[0][0])) {
-            while (mario.collision(&reference[0][0])) {
+        if (mario.collision(&reference[0][0], &eventList, true)) {
+            while (mario.collision(&reference[0][0], &eventList, false)) {
                 mario.inBounds();
                 mario.pollTiles(false);
             }

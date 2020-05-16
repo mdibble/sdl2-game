@@ -10,7 +10,7 @@ MapEvent::MapEvent(int x, int y, int event, int *mapPointer) {
     this -> eventID = event;
     this -> map = mapPointer;
     this -> nextEvent = NULL;
-    this -> length = (event == 0) ? 20 : 1; 
+    this -> length = (event == 0 || event == 2) ? 10 : 1; 
 }
 
 void MapEvent::setX(int x) {
@@ -49,15 +49,17 @@ int MapEvent::progressEvent() {
             return this -> bump();
         case 1:
             return this -> breakBlock();
+        case 2:
+            return this -> questionBlockHit();
     }
     return -1;
 }
 
 int MapEvent::bump() {
-    if (frame < 10)
+    if (frame < 5)
         return frame;
-    if (frame < 20)
-        return 20 - frame;
+    if (frame < 10)
+        return 10 - frame;
     else
         return 0;
 }
@@ -65,4 +67,14 @@ int MapEvent::bump() {
 int MapEvent::breakBlock() {
     *(this -> map + (MAP_WIDTH * this -> getY()) + this -> getX()) = '0';
     return 0;
+}
+
+int MapEvent::questionBlockHit() {
+    if (frame < 5)
+        return frame;
+    if (frame < 10)
+        return 10 - frame;
+    if (frame == 10)
+        *(this -> map + (MAP_WIDTH * this -> getY()) + this -> getX()) = '5';
+        return 0;
 }
