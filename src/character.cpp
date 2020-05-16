@@ -17,6 +17,9 @@ Character::Character(float xPos, float yPos, SDL_Texture* textSrc) {
 
     this -> canJump = true;
     this -> running = false;
+    this -> status = 0;
+    this -> width = 48;
+    this -> height = 48;
 
     currentFrame.x = 0;
     currentFrame.y = 0;
@@ -72,6 +75,23 @@ void Character::setrunning(bool state) {
     this -> running = state;
 }
 
+void Character::updateStatus(int update) {
+    this -> status = update;
+
+    switch (this -> status) {
+        case 0:
+            this -> width = 48;
+            this -> height = 48;
+            this -> setSpriteSrc(80, 34, 16, 16);
+            break;
+        case 1:
+            this -> width = 48;
+            this -> height = 96;
+            this -> setSpriteSrc(80, 1, 16, 32);
+            break;
+    }
+}
+
 void Character::setcollisionBottom(bool state) {
     this -> collisionBottom = state;
 }
@@ -113,32 +133,32 @@ void Character::pollTiles(bool debug) {
     this -> tiles[0][1] = (this -> y) / 48;
 
     // Top Right
-    this -> tiles[1][0] = (this -> x + 48) / 48;
+    this -> tiles[1][0] = (this -> x + (this -> width - 2)) / 48;
     this -> tiles[1][1] = (this -> y) / 48;
 
     // Bottom Left
     this -> tiles[2][0] = (this -> x) / 48;
-    this -> tiles[2][1] = (this -> y + 48) / 48;
+    this -> tiles[2][1] = (this -> y + (this -> height - 2)) / 48;
 
     // Bottom Right
-    this -> tiles[3][0] = (this -> x + 48) / 48;
-    this -> tiles[3][1] = (this -> y + 48) / 48;
+    this -> tiles[3][0] = (this -> x + (this -> width - 2)) / 48;
+    this -> tiles[3][1] = (this -> y + (this -> height - 2)) / 48;
 
     // Top Middle
-    this -> tiles[4][0] = (this -> x + 24) / 48;
+    this -> tiles[4][0] = (this -> x + ((this -> width) / 2)) / 48;
     this -> tiles[4][1] = (this -> y) / 48;
 
     // Right Middle
-    this -> tiles[5][0] = (this -> x + 48) / 48;
-    this -> tiles[5][1] = (this -> y + 24) / 48;
+    this -> tiles[5][0] = (this -> x + (this -> width - 2)) / 48;
+    this -> tiles[5][1] = (this -> y + ((this -> height) / 2)) / 48;
 
     // Bottom Middle
-    this -> tiles[6][0] = (this -> x + 24) / 48;
-    this -> tiles[6][1] = (this -> y + 48) / 48;
+    this -> tiles[6][0] = (this -> x + ((this -> width) / 2)) / 48;
+    this -> tiles[6][1] = (this -> y + (this -> height - 2)) / 48;
 
     // Left Middle
     this -> tiles[7][0] = (this -> x) / 48;
-    this -> tiles[7][1] = (this -> y + 24) / 48;
+    this -> tiles[7][1] = (this -> y + ((this -> height) / 2)) / 48;
 
     if (debug) {
         std::cout << "T-LEFT: " << this -> tiles[0][0] << ", " << this -> tiles[0][1] <<

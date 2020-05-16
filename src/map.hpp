@@ -6,12 +6,16 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "renderWindow.hpp"
+#include "mapEvent.hpp"
+#include "eventList.hpp"
 
 class Map {
 public:
     Map(int reference[MAP_HEIGHT][MAP_WIDTH]);
-    void loadMap(RenderWindow &window, Camera &cam, SDL_Texture *palette);
+    Map(int *reference);
+    void loadMap(RenderWindow &window, Camera &cam, SDL_Texture *palette, EventList *eventList);
     void drawMap();
 private:
     int tileMap[MAP_HEIGHT][MAP_WIDTH];
+    int *tileMapPointer;
 };

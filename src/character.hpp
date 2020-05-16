@@ -8,6 +8,7 @@ public:
     void jump(float height);
     void updateVelocity();
     void move();
+    void updateStatus(int update);
     float getvelocityX();
     float getvelocityY();
     bool getcanJump();
@@ -30,8 +31,9 @@ public:
     
 private:
     float velocityX, velocityY;
-    float prevVelocityX, prevVelocityY; // deal with this!
     bool canJump, running;
     bool collisionLeft, collisionRight, collisionTop, collisionBottom;
     int tiles[8][2];
+    int status;
+    int width, height;
 };
