@@ -59,6 +59,10 @@ bool Character::getcollisionBottom() {
     return (this -> collisionBottom);
 }
 
+int* Character::gettiles() {
+    return &(this -> tiles[0][0]);
+}
+
 void Character::setvelocityX(float velocity) {
     this -> velocityX = velocity;
 }

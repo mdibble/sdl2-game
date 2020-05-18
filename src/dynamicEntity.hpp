@@ -1,41 +1,39 @@
 #pragma once
 
 #include "entity.hpp"
-#include "eventList.hpp"
 
-class Character: public Entity {
+class DynamicEntity: public Entity {
 public:
-    Character(float xPos, float yPos, SDL_Texture* textSrc);
-    void jump(float height);
-    void updateVelocity();
-    void move();
-    void updateStatus(int update);
+    DynamicEntity(int tileX, int tileY, SDL_Texture* textSrc);
+    DynamicEntity();
+    void updateEntity();
     float getvelocityX();
     float getvelocityY();
-    bool getcanJump();
-    bool getrunning();
+    int getoriginTileX();
+    int getoriginTileY();
+    int getwidth();
+    int getheight();
     bool getcollisionLeft();
     bool getcollisionRight();
     bool getcollisionTop();
     bool getcollisionBottom();
-    int* gettiles();
     void setvelocityX(float velocity);
     void setvelocityY(float velocity);
-    void setcanJump(bool state);
-    void setrunning(bool state);
+    void setoriginTileX(int tile);
+    void setoriginTileY(int tile);
+    void setwidth(int width);
+    void setheight(int height);
     void setcollisionLeft(bool state);
     void setcollisionRight(bool state);
     void setcollisionTop(bool state);
     void setcollisionBottom(bool state);
     void pollTiles(bool debug);
-    bool collision(int *map, EventList *eventList, bool enableEvents);
+    bool collision(int *map);
     void inBounds();
-    
-private:
+protected:
     float velocityX, velocityY;
-    bool canJump, running;
+    int originTileX, originTileY;
     bool collisionLeft, collisionRight, collisionTop, collisionBottom;
-    int tiles[8][2];
-    int status;
     int width, height;
+    int currentTiles[8][2];
 };

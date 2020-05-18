@@ -12,6 +12,8 @@
 #include "controller.hpp"
 #include "mapEvent.hpp"
 #include "eventList.hpp"
+#include "dynamicEntity.hpp"
+#include "item.hpp"
 
 int main(int argc, char* args[]) {
     if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -23,6 +25,7 @@ int main(int argc, char* args[]) {
 
     SDL_Texture* general = window.loadTexture("assets/images/general.png");
     SDL_Texture* character = window.loadTexture("assets/images/character.png");
+    SDL_Texture* miscText = window.loadTexture("assets/images/misc.png");
     SDL_Texture* skyText = window.loadTexture("assets/images/sky.png");
 
     int reference[MAP_HEIGHT][MAP_WIDTH] = {{'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'},
@@ -48,6 +51,8 @@ int main(int argc, char* args[]) {
 
     Character mario(250, 400, character);
     mario.updateStatus(0);
+
+    Item test(7, 12, 1, miscText);
 
     Controller controller(0);
     Map map(&reference[0][0]);
@@ -96,6 +101,8 @@ int main(int argc, char* args[]) {
         if (controller.getA())
             mario.jump(-15);
 
+        test.updateEntity(&reference[0][0]);
+
         mario.updateVelocity();
         mario.move();
         
@@ -111,6 +118,7 @@ int main(int argc, char* args[]) {
         cam.centerX(mario);
         window.render(sky);
         map.loadMap(window, cam, general, &eventList);
+        window.render(test, cam);
         window.render(mario, cam);
         window.draw();
 
