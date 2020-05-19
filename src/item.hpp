@@ -1,6 +1,5 @@
 #pragma once
 
-#include "dynamicEntity.hpp"
 #include "character.hpp"
 #include <iostream>
 
@@ -14,12 +13,14 @@ public:
     // [3] 1-Up
     // [4] Star
     // [5] Coin (in question block)
-    void updateEntity(int *map);
+    void updateEntity(int *map, Character *character);
     bool collision(int *map);
     void move();
-    void checkInteraction(Character &character);
-    void consume();
+    void consume(Character *effectOffload);
+    void setNextItem(Item *item);
+    Item *getNextItem();
 private:
     int itemID;
     int quantity;
+    Item *nextItem;
 };

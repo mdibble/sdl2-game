@@ -47,10 +47,14 @@ Item::Item(int tileX, int tileY, int itemID, SDL_Texture* textSrc) {
             this -> velocityX = 2;
             break;
     }
-    
-    
+}
 
-    
+void Item::setNextItem(Item *event) {
+    this -> nextItem = event;
+}
+
+Item *Item::getNextItem() {
+    return this -> nextItem;
 }
 
 void Item::move() {
@@ -90,7 +94,7 @@ bool Item::collision(int *map) {
     return false;
 }
 
-void Item::updateEntity(int *map) {
+void Item::updateEntity(int *map, Character *character) {
     this -> move();
     if (this -> itemID != 0 && this -> itemID != 2)
         this -> velocityY = this -> velocityY + 0.2;
@@ -101,12 +105,19 @@ void Item::updateEntity(int *map) {
             this -> pollTiles(false);
         }
     }
+    if (this -> checkInteraction(character))
+        this -> consume(character);
 }
 
-bool checkInteraction(Character &character) {
-    return false;
-}
-
-void consume() {
-
+void Item::consume(Character *effectOffload) {
+    switch (this -> itemID) {
+        case 0:
+            break;
+        case 1:
+            effectOffload -> updateStatus(1);
+            break;
+        case 2:
+            effectOffload -> updateStatus(2);
+            break;
+    }
 }

@@ -30,6 +30,7 @@ public:
     void pollTiles(bool debug);
     bool collision(int *map);
     void inBounds();
+    bool checkInteraction(DynamicEntity *entity);
 protected:
     float velocityX, velocityY;
     int originTileX, originTileY;

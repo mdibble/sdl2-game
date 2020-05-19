@@ -14,6 +14,7 @@
 #include "eventList.hpp"
 #include "dynamicEntity.hpp"
 #include "item.hpp"
+#include "itemList.hpp"
 
 int main(int argc, char* args[]) {
     if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -52,14 +53,14 @@ int main(int argc, char* args[]) {
     Character mario(250, 400, character);
     mario.updateStatus(0);
 
-    Item test(7, 12, 1, miscText);
-
     Controller controller(0);
     Map map(&reference[0][0]);
 
     EventList eventList(&reference[0][0]);
-    eventList.addEvent(18, 9, 0);
-    eventList.addEvent(24, 9, 0);
+
+    ItemList itemList(&reference[0][0], &mario);
+    itemList.addItem(8, 12, 1, miscText);
+    itemList.addItem(10, 9, 1, miscText);
 
     Uint32 frameStart;
     int frameTime;
@@ -77,6 +78,7 @@ int main(int argc, char* args[]) {
         }
 
         eventList.pollList();
+        itemList.pollList();
 
         if (controller.getB())
             mario.setrunning(true);
@@ -101,8 +103,6 @@ int main(int argc, char* args[]) {
         if (controller.getA())
             mario.jump(-15);
 
-        test.updateEntity(&reference[0][0]);
-
         mario.updateVelocity();
         mario.move();
         
@@ -118,7 +118,12 @@ int main(int argc, char* args[]) {
         cam.centerX(mario);
         window.render(sky);
         map.loadMap(window, cam, general, &eventList);
-        window.render(test, cam);
+
+        Item *ptr = itemList.getHead();
+        while (ptr) {
+            window.render(*ptr, cam);
+            ptr = ptr -> getNextItem();
+        }
         window.render(mario, cam);
         window.draw();
 

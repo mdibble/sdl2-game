@@ -27,48 +27,12 @@ Character::Character(float xPos, float yPos, SDL_Texture* textSrc) {
     currentFrame.h = 32;
 }
 
-float Character::getvelocityX() {
-    return (this -> velocityX);
-}
-
-float Character::getvelocityY() {
-    return (this -> velocityY);
-}
-
 bool Character::getcanJump() {
     return (this -> canJump);
 }
 
 bool Character::getrunning() {
     return (this -> running);
-}
-
-bool Character::getcollisionLeft() {
-    return (this -> collisionLeft);
-}
-
-bool Character::getcollisionRight() {
-    return (this -> collisionRight);
-}
-
-bool Character::getcollisionTop() {
-    return (this -> collisionTop);
-}
-
-bool Character::getcollisionBottom() {
-    return (this -> collisionBottom);
-}
-
-int* Character::gettiles() {
-    return &(this -> tiles[0][0]);
-}
-
-void Character::setvelocityX(float velocity) {
-    this -> velocityX = velocity;
-}
-
-void Character::setvelocityY(float velocity) {
-    this -> velocityY = velocity;
 }
 
 void Character::setcanJump(bool state) {
@@ -93,23 +57,12 @@ void Character::updateStatus(int update) {
             this -> height = 96;
             this -> setSpriteSrc(80, 1, 16, 32);
             break;
+        case 2:
+            this -> width = 48;
+            this -> height = 96;
+            this -> setSpriteSrc(80, 129, 16, 32);
+            break;
     }
-}
-
-void Character::setcollisionBottom(bool state) {
-    this -> collisionBottom = state;
-}
-
-void Character::setcollisionTop(bool state) {
-    this -> collisionTop = state;
-}
-
-void Character::setcollisionLeft(bool state) {
-    this -> collisionLeft = state;
-}
-
-void Character::setcollisionRight(bool state) {
-    this -> collisionRight = state;
 }
 
 void Character::updateVelocity() {
@@ -131,51 +84,6 @@ void Character::jump(float height) {
     this -> setcanJump(false);
 }
 
-void Character::pollTiles(bool debug) {
-    // Top Left
-    this -> tiles[0][0] = (this -> x) / 48;
-    this -> tiles[0][1] = (this -> y) / 48;
-
-    // Top Right
-    this -> tiles[1][0] = (this -> x + (this -> width - 2)) / 48;
-    this -> tiles[1][1] = (this -> y) / 48;
-
-    // Bottom Left
-    this -> tiles[2][0] = (this -> x) / 48;
-    this -> tiles[2][1] = (this -> y + (this -> height - 2)) / 48;
-
-    // Bottom Right
-    this -> tiles[3][0] = (this -> x + (this -> width - 2)) / 48;
-    this -> tiles[3][1] = (this -> y + (this -> height - 2)) / 48;
-
-    // Top Middle
-    this -> tiles[4][0] = (this -> x + ((this -> width) / 2)) / 48;
-    this -> tiles[4][1] = (this -> y) / 48;
-
-    // Right Middle
-    this -> tiles[5][0] = (this -> x + (this -> width - 2)) / 48;
-    this -> tiles[5][1] = (this -> y + ((this -> height) / 2)) / 48;
-
-    // Bottom Middle
-    this -> tiles[6][0] = (this -> x + ((this -> width) / 2)) / 48;
-    this -> tiles[6][1] = (this -> y + (this -> height - 2)) / 48;
-
-    // Left Middle
-    this -> tiles[7][0] = (this -> x) / 48;
-    this -> tiles[7][1] = (this -> y + ((this -> height) / 2)) / 48;
-
-    if (debug) {
-        std::cout << "T-LEFT: " << this -> tiles[0][0] << ", " << this -> tiles[0][1] <<
-                 " T-MIDDLE: " << this -> tiles[4][0] << ", " << this -> tiles[4][1] <<
-                 " T-RIGHT: " << this -> tiles[1][0] << ", " << this -> tiles[1][1] <<
-                 " B-LEFT: " << this -> tiles[2][0] << ", " << this -> tiles[2][1] <<
-                 " B-MIDDLE: " << this -> tiles[6][0] << ", " << this -> tiles[6][1] <<
-                 " B-RIGHT: " << this -> tiles[3][0] << ", " << this -> tiles[3][1] << 
-                 " L-MIDDLE: " << this -> tiles[7][0] << ", " << this -> tiles[7][1] << 
-                 " R-MIDDLE: " << this -> tiles[5][0] << ", " << this -> tiles[5][1] << std::endl;
-    }
-}
-
 bool Character::collision(int *map, EventList *eventList, bool enableEvents) {
 
     //  0   4   1
@@ -192,9 +100,9 @@ bool Character::collision(int *map, EventList *eventList, bool enableEvents) {
     bool clipped[8];
 
     for (int i = 0; i < 8; i++)
-        clipped[i] =   (*(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) != '0' && 
-                        (*(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) < 'a' ||
-                        *(map + (MAP_WIDTH * this -> tiles[i][1]) + this -> tiles[i][0]) > 'z')) ? true : false;
+        clipped[i] =   (*(map + (MAP_WIDTH * this -> currentTiles[i][1]) + this -> currentTiles[i][0]) != '0' && 
+                        (*(map + (MAP_WIDTH * this -> currentTiles[i][1]) + this -> currentTiles[i][0]) < 'a' ||
+                        *(map + (MAP_WIDTH * this -> currentTiles[i][1]) + this -> currentTiles[i][0]) > 'z')) ? true : false;
 
     bool L, R, B, T;
 
@@ -220,12 +128,12 @@ bool Character::collision(int *map, EventList *eventList, bool enableEvents) {
     this -> setcollisionBottom(B);
 
     if (this -> getcollisionTop()) {
-        if (this -> status == 1 && *(map + (MAP_WIDTH * this -> tiles[4][1]) + this -> tiles[4][0]) == '2')
-            eventList -> addEvent(this -> tiles[4][0], this -> tiles[4][1], 1);
-        else if (*(map + (MAP_WIDTH * this -> tiles[4][1]) + this -> tiles[4][0]) == '2')
-            eventList -> addEvent(this -> tiles[4][0], this -> tiles[4][1], 0);
-        else if (*(map + (MAP_WIDTH * this -> tiles[4][1]) + this -> tiles[4][0]) == '3') {
-            eventList -> addEvent(this -> tiles[4][0], this -> tiles[4][1], 2);
+        if (this -> status == 1 && *(map + (MAP_WIDTH * this -> currentTiles[4][1]) + this -> currentTiles[4][0]) == '2')
+            eventList -> addEvent(this -> currentTiles[4][0], this -> currentTiles[4][1], 1);
+        else if (*(map + (MAP_WIDTH * this -> currentTiles[4][1]) + this -> currentTiles[4][0]) == '2')
+            eventList -> addEvent(this -> currentTiles[4][0], this -> currentTiles[4][1], 0);
+        else if (*(map + (MAP_WIDTH * this -> currentTiles[4][1]) + this -> currentTiles[4][0]) == '3') {
+            eventList -> addEvent(this -> currentTiles[4][0], this -> currentTiles[4][1], 2);
         }
     }
 
@@ -233,15 +141,4 @@ bool Character::collision(int *map, EventList *eventList, bool enableEvents) {
         return true;
        
     return false;
-}
-
-void Character::inBounds() {
-    if (this -> getcollisionLeft())
-        this -> setx(this -> getx() + 1);
-    if (this -> getcollisionRight())
-        this -> setx(this -> getx() - 1);
-    if (this -> getcollisionTop())
-        this -> sety(this -> gety() + 1);
-    if (this -> getcollisionBottom())
-        this -> sety(this -> gety() - 1);
 }

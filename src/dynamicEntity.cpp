@@ -207,3 +207,12 @@ void DynamicEntity::inBounds() {
     if (this -> getcollisionBottom())
         this -> sety(this -> gety() - 1);
 }
+
+bool DynamicEntity::checkInteraction(DynamicEntity *that) {
+    if ((this -> getx() >= that -> getx() && this -> getx() <= that -> getx() + that -> getwidth() || 
+        (this -> getx() + this -> getwidth() >= that -> getx() && this -> getx()  + this -> getwidth() <= that -> getx() + that -> getwidth())) &&
+        ((this -> gety() >= that -> gety() && this -> gety() <= that -> gety() + that -> getheight()) || 
+        (this -> gety() + this -> getheight() >= that -> gety() && this -> gety()  + this -> getheight() <= that -> gety() + that -> getheight())))
+        return true;
+    return false;
+}

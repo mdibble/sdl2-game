@@ -14,3 +14,5 @@ private:
     MapEvent *head, *tail;
     int *mapReference;
 };
+
+// have to deal with removing items from the data structure

@@ -57,9 +57,9 @@ int MapEvent::progressEvent() {
 
 int MapEvent::bump() {
     if (frame < 5)
-        return frame;
+        return frame * 2;
     if (frame < 10)
-        return 10 - frame;
+        return 20 - frame * 2;
     else
         return 0;
 }
@@ -70,11 +70,10 @@ int MapEvent::breakBlock() {
 }
 
 int MapEvent::questionBlockHit() {
+    *(this -> map + (MAP_WIDTH * this -> getY()) + this -> getX()) = '5';
     if (frame < 5)
-        return frame;
+        return frame * 2;
     if (frame < 10)
-        return 10 - frame;
-    if (frame == 10)
-        *(this -> map + (MAP_WIDTH * this -> getY()) + this -> getX()) = '5';
-        return 0;
+        return 20 - frame * 2;
+    return 0;
 }
