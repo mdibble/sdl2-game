@@ -13,14 +13,21 @@ public:
     // [3] 1-Up
     // [4] Star
     // [5] Coin (in question block)
-    void updateEntity(int *map, Character *character);
+    void updateEntity(int *map, Character *character, EventList *eventList);
     bool collision(int *map);
     void move();
     void consume(Character *effectOffload);
     void setNextItem(Item *item);
+    void setPrevItem(Item *item);
     Item *getNextItem();
+    Item *getPrevItem();
+    bool getactive();
+    int getquantity();
 private:
     int itemID;
     int quantity;
+    bool active;
+    bool spawning;
     Item *nextItem;
+    Item *prevItem;
 };

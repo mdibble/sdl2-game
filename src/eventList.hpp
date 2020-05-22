@@ -7,7 +7,9 @@ public:
     EventList(int *map);
     void addEvent(int x, int y, int event);
     void pollList();
-    void removeEvent();
+    void cleanList();
+    void removeEvent(MapEvent *event);
+    bool correspondingEvent(int x, int y);
     MapEvent *getHead();
     MapEvent *getTail();
 private:

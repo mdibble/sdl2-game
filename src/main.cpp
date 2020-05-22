@@ -59,8 +59,8 @@ int main(int argc, char* args[]) {
     EventList eventList(&reference[0][0]);
 
     ItemList itemList(&reference[0][0], &mario);
-    itemList.addItem(8, 12, 1, miscText);
-    itemList.addItem(10, 9, 1, miscText);
+    itemList.addItem(23, 9, 1, miscText);
+    itemList.addItem(18, 9, 5, miscText);
 
     Uint32 frameStart;
     int frameTime;
@@ -78,7 +78,8 @@ int main(int argc, char* args[]) {
         }
 
         eventList.pollList();
-        itemList.pollList();
+        itemList.pollList(&eventList);
+        eventList.cleanList();
 
         if (controller.getB())
             mario.setrunning(true);
@@ -121,7 +122,8 @@ int main(int argc, char* args[]) {
 
         Item *ptr = itemList.getHead();
         while (ptr) {
-            window.render(*ptr, cam);
+            if (ptr -> getactive())
+                window.render(*ptr, cam);
             ptr = ptr -> getNextItem();
         }
         window.render(mario, cam);

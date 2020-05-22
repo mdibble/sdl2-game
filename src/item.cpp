@@ -26,35 +26,57 @@ Item::Item(int tileX, int tileY, int itemID, SDL_Texture* textSrc) {
     currentFrame.h = 32;
 
     this -> itemID = itemID;
+    this -> quantity = 1;
+    this -> spawning = true;
+    this -> active = false;
 
     switch (itemID) {
         case 0:
             this -> setSpriteSrc(0, 96, 16, 16);
+            this -> spawning = false;
+            this -> active = true;
             break;
         case 1:
             this -> setSpriteSrc(0, 0, 16, 16);
-            this -> velocityX = 2;
             break;
         case 2:
             this -> setSpriteSrc(0, 32, 16, 16);
             break;
         case 3:
             this -> setSpriteSrc(16, 0, 16, 16);
-            this -> velocityX = 2;
             break;
         case 4:
             this -> setSpriteSrc(0, 48, 16, 16);
-            this -> velocityX = 2;
+            break;
+        case 5:
+            this -> sety(this -> gety() - 48);
+            this -> setSpriteSrc(0, 96, 16, 16);
             break;
     }
 }
 
-void Item::setNextItem(Item *event) {
-    this -> nextItem = event;
+void Item::setNextItem(Item *destination) {
+    this -> nextItem = destination;
+}
+
+void Item::setPrevItem(Item *destination) {
+    this -> prevItem = destination;
 }
 
 Item *Item::getNextItem() {
     return this -> nextItem;
+}
+
+Item *Item::getPrevItem() {
+    return this -> prevItem;
+}
+
+int Item::getquantity() {
+    return this -> quantity;
+}
+
+bool Item::getactive() {
+    return this -> active;
 }
 
 void Item::move() {
@@ -94,19 +116,46 @@ bool Item::collision(int *map) {
     return false;
 }
 
-void Item::updateEntity(int *map, Character *character) {
-    this -> move();
-    if (this -> itemID != 0 && this -> itemID != 2)
-        this -> velocityY = this -> velocityY + 0.2;
-    this -> pollTiles(false);
-    if (this -> collision(map)) {
-        while (this -> collision(map)) {
-            this -> inBounds();
-            this -> pollTiles(false);
+void Item::updateEntity(int *map, Character *character, EventList *eventList) {
+
+    if (!active) {
+        if (eventList -> correspondingEvent(this -> getoriginTileX(), this -> getoriginTileY()))
+            active = true;
+        else
+            return;
+    }
+
+    if (spawning) {
+        if (itemID == 5) {
+            this -> sety(this -> gety() - 4);
+            if (this -> gety() / 48 <= this -> getoriginTileY() - 2) {
+                this -> consume(character);
+            } 
+        }
+
+        else {
+            this -> sety(this -> gety() - 1);
+            if (this -> gety() / 48 <= this -> getoriginTileY() - 1) {
+                spawning = false;
+                this -> setvelocityX(2);
+            }  
         }
     }
-    if (this -> checkInteraction(character))
-        this -> consume(character);
+
+    else {
+        this -> move();
+        if (this -> itemID != 0 && this -> itemID != 2)
+            this -> velocityY = this -> velocityY + 0.2;
+        this -> pollTiles(false);
+        if (this -> collision(map)) {
+            while (this -> collision(map)) {
+                this -> inBounds();
+                this -> pollTiles(false);
+            }
+        }
+        if (this -> checkInteraction(character))
+            this -> consume(character);
+    }
 }
 
 void Item::consume(Character *effectOffload) {
@@ -119,5 +168,9 @@ void Item::consume(Character *effectOffload) {
         case 2:
             effectOffload -> updateStatus(2);
             break;
+        case 5:
+            this -> sety(this -> gety() - 48);
+            break;
     }
+    this -> quantity -= 1;
 }

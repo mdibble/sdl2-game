@@ -17,22 +17,63 @@ Item *ItemList::getTail() {
 
 void ItemList::addItem(int tileX, int tileY, int itemID, SDL_Texture* textSrc) {
     Item *newItem = new Item(tileX, tileY, itemID, textSrc);
+    newItem -> setPrevItem(this -> tail);
+    newItem -> setNextItem(NULL);
 
-    if (this -> head == NULL) {
+    if (this -> head == NULL)
         this -> head = newItem;
-        this -> tail = newItem;
-    }
-
-    else {
+    else
         this -> tail -> setNextItem(newItem);
-        this -> tail = tail -> getNextItem();
-    }  
+    this -> tail = newItem;
 }
 
-void ItemList::pollList() {
+void ItemList::removeItem(Item *ptr) {
+    if (!ptr)
+        return;
+
+	if (ptr -> getPrevItem() == NULL) {
+		head = ptr -> getNextItem();
+        if (head)
+		    head -> setPrevItem(NULL);
+	}
+
+	else if (ptr -> getNextItem() == NULL) {
+		tail = ptr -> getPrevItem();
+		tail -> setNextItem(NULL);
+	}
+
+	else {
+		ptr -> getPrevItem() -> setNextItem(ptr -> getNextItem());
+		ptr -> getNextItem() -> setPrevItem(ptr -> getPrevItem());
+	}
+
+	delete ptr;
+}
+
+bool ItemList::correspondingItem(int x, int y) {
     Item *ptr = this -> head;
     while (ptr) {
-        ptr -> updateEntity(this -> map, this -> character);
+        if (ptr -> getoriginTileX() == x && ptr -> getoriginTileY() == y)
+            return true;
         ptr = ptr -> getNextItem();
     }
+    return false;
+}
+
+void ItemList::cleanList() {
+    Item *ptr = head;
+    while (ptr) {
+        if (ptr -> getquantity() == 0) 
+            removeItem(ptr);
+        ptr = ptr -> getNextItem();
+    }
+}
+
+void ItemList::pollList(EventList *events) {
+    Item *ptr = this -> head;
+    while (ptr) {
+        ptr -> updateEntity(this -> map, this -> character, events);
+        ptr = ptr -> getNextItem();
+    }
+    cleanList();
 }

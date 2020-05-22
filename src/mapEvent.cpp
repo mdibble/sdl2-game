@@ -11,6 +11,7 @@ MapEvent::MapEvent(int x, int y, int event, int *mapPointer) {
     this -> map = mapPointer;
     this -> nextEvent = NULL;
     this -> length = (event == 0 || event == 2) ? 10 : 1; 
+    this -> finished = false;
 }
 
 void MapEvent::setX(int x) {
@@ -25,6 +26,10 @@ void MapEvent::setNextEvent(MapEvent *event) {
     this -> nextEvent = event;
 }
 
+void MapEvent::setPrevEvent(MapEvent *event) {
+    this -> prevEvent = event;
+}
+
 int MapEvent::getX() {
     return this -> tileX;
 }
@@ -33,8 +38,16 @@ int MapEvent::getY() {
     return this -> tileY;
 }
 
+bool MapEvent::getfinished() {
+    return this -> finished;
+}
+
 MapEvent *MapEvent::getNextEvent() {
     return this -> nextEvent;
+}
+
+MapEvent *MapEvent::getPrevEvent() {
+    return this -> prevEvent;
 }
 
 int MapEvent::progressEvent() {
@@ -60,12 +73,13 @@ int MapEvent::bump() {
         return frame * 2;
     if (frame < 10)
         return 20 - frame * 2;
-    else
-        return 0;
+    finished = true;
+    return 0;
 }
 
 int MapEvent::breakBlock() {
     *(this -> map + (MAP_WIDTH * this -> getY()) + this -> getX()) = '0';
+    finished = true;
     return 0;
 }
 
@@ -75,5 +89,6 @@ int MapEvent::questionBlockHit() {
         return frame * 2;
     if (frame < 10)
         return 20 - frame * 2;
+    finished = true;
     return 0;
 }
